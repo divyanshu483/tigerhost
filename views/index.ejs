@@ -1,0 +1,215 @@
+<%- include('partials/header', { title: 'Tiger Host | Premium Game Server Hosting' }) %>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo-ring">
+    <svg class="ring-svg" viewBox="0 0 140 140">
+      <defs>
+        <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#1400ff"/>
+          <stop offset="50%" stop-color="#00ccff"/>
+          <stop offset="100%" stop-color="#1400ff" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <circle cx="70" cy="70" r="64"/>
+    </svg>
+    <img class="loader-logo-img" src="https://i.ibb.co/mCBp1nMm/Whats-App-Image-2026-06-27-at-10-28-30-AM.jpg" alt="Tiger Host">
+  </div>
+  <div class="loader-name">Tiger Host</div>
+  <div class="loader-bar-wrap"><div class="loader-bar" id="loaderBar"></div></div>
+  <div class="loader-dots"><span></span><span></span><span></span></div>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-left" id="heroLeft">
+    <div class="h-rating"><span class="stars">★★★★★</span> Rated 4.9/5 by 10,000+ Gamers</div>
+    <h1>Unleash the Power of<br>Reliable Game Hosting<br>with <span class="hl">Tiger Host</span></h1>
+    <p>India's most trusted game server hosting. Deploy Minecraft, Rust, ARK, FiveM and 60+ more games in under 60 seconds — zero lag, 99.99% uptime, 24/7 expert support.</p>
+    <div class="hero-btns">
+      <a href="/games" class="hbtn hbtn-pri">🚀 Deploy Now — Best Service</a>
+      <a href="/games" class="hbtn hbtn-sec">View All Plans</a>
+    </div>
+    <div class="hero-services-label">Our Popular Hosting Services</div>
+    <div class="hero-chips">
+      <a href="/games" class="chip"><span>⛏️</span> Budget-Minecraft</a>
+      <a href="/games" class="chip"><span>🌊</span> Premium-Minecraft</a>
+      <a href="/games" class="chip"><span>🔫</span> VPS</a>
+      <a href="/games" class="chip"><span>🤖</span> BOT</a>
+      <a href="/games" class="chip"><span>🌐</span> Domain</a>
+    </div>
+  </div>
+
+  <!-- HERO PANEL — plans injected by server, not loaded by JS -->
+  <div class="hero-right" id="heroRight">
+    <div class="h-panel">
+      <div class="hp-head">
+        <div class="hp-head-title">⚡ Live Plans</div>
+      </div>
+      <div class="hp-rows">
+        <% plans.slice(0,5).forEach(function(p, i) { %>
+          <% const badges = { pop:'badge-hot', hot:'badge-new', new:'badge-new' }; %>
+          <% const badgeTxt = { pop:'Popular', hot:'Hot', new:'New' }; %>
+          <div class="hp-row" onclick="window.location='/games'">
+            <div class="hp-icon"><%= p.emoji || '📦' %></div>
+            <div class="hp-info">
+              <div class="hp-name"><%= p.name %></div>
+              <div class="hp-sub"><%= p.ram || '' %></div>
+            </div>
+            <div class="hp-right-col">
+              <div class="hp-price">₹<%= p.price %>/mo</div>
+              <% if(p.tag) { %>
+                <div class="hp-badge <%= badges[p.tag] || '' %>"><%= badgeTxt[p.tag] || '' %></div>
+              <% } %>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+      <div class="hp-live-bar">
+        <div class="live-dot"></div>
+        <div class="live-text">LIVE</div>
+        <div class="live-count"><span id="liveCount">872</span> servers online</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUSTED BY -->
+<div class="trusted">
+  <h3>Trusted by 10,000+ Gamers &amp; Influencers</h3>
+  <div class="inf-track-wrap">
+    <div class="inf-track">
+      <div class="inf"><div class="inf-av" style="background:linear-gradient(135deg,#1400ff,#0040ff)">GF</div><div><div class="inf-name">GameFleet</div><div class="inf-subs">2.1M Subs</div><div class="inf-plat">▶ YouTube</div></div></div>
+      <div class="inf"><div class="inf-av" style="background:linear-gradient(135deg,#cc2200,#ff4400)">BP</div><div><div class="inf-name">BatuPlays</div><div class="inf-subs">890K Followers</div><div class="inf-plat">📺 Twitch</div></div></div>
+      <div class="inf"><div class="inf-av" style="background:linear-gradient(135deg,#0088ff,#00ccff)">MC</div><div><div class="inf-name">MCFrame</div><div class="inf-subs">1.4M Subs</div><div class="inf-plat">▶ YouTube</div></div></div>
+      <div class="inf"><div class="inf-av" style="background:linear-gradient(135deg,#5500cc,#9900ff)">ZG</div><div><div class="inf-name">ZeroGG</div><div class="inf-subs">3.2M Followers</div><div class="inf-plat">📷 Instagram</div></div></div>
+      <div class="inf"><div class="inf-av" style="background:linear-gradient(135deg,#006633,#00bb55)">VS</div><div><div class="inf-name">VortexStrike</div><div class="inf-subs">670K Members</div><div class="inf-plat">💬 Discord</div></div></div>
+      <div class="inf"><div class="inf-av" style="background:linear-gradient(135deg,#aa6600,#ffaa00)">PG</div><div><div class="inf-name">ProGamer_IN</div><div class="inf-subs">1.1M Subs</div><div class="inf-plat">▶ YouTube</div></div></div>
+      <!-- duplicate for seamless loop -->
+      <div class="inf"><div class="inf-av" style="background:linear-gradient(135deg,#1400ff,#0040ff)">GF</div><div><div class="inf-name">GameFleet</div><div class="inf-subs">2.1M Subs</div><div class="inf-plat">▶ YouTube</div></div></div>
+      <div class="inf"><div class="inf-av" style="background:linear-gradient(135deg,#cc2200,#ff4400)">BP</div><div><div class="inf-name">BatuPlays</div><div class="inf-subs">890K Followers</div><div class="inf-plat">📺 Twitch</div></div></div>
+      <div class="inf"><div class="inf-av" style="background:linear-gradient(135deg,#0088ff,#00ccff)">MC</div><div><div class="inf-name">MCFrame</div><div class="inf-subs">1.4M Subs</div><div class="inf-plat">▶ YouTube</div></div></div>
+      <div class="inf"><div class="inf-av" style="background:linear-gradient(135deg,#5500cc,#9900ff)">ZG</div><div><div class="inf-name">ZeroGG</div><div class="inf-subs">3.2M Followers</div><div class="inf-plat">📷 Instagram</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- WHY -->
+<div class="why" id="why">
+  <div class="why-wrap">
+    <div class="why-left reveal left">
+      <div class="sec-tag">⚡ Why Tiger Host Stands Out</div>
+      <h2>Game Hosting <span class="hl">Redefined</span><br>for Performance</h2>
+      <p>Tiger Host delivers enterprise-grade infrastructure at gamer-friendly prices. Ultra-low latency Indian nodes, Gen 4 NVMe SSDs, automated backups, and hands-on 24/7 support — we're built different.</p>
+      <a href="/games" class="why-btn">Explore Plans →</a>
+      <div class="why-stats">
+        <div class="ws reveal reveal-delay-1"><div class="n">3k+</div><div class="l">Active Servers</div></div>
+        <div class="ws reveal reveal-delay-2"><div class="n">99.99%</div><div class="l">Uptime SLA</div></div>
+        <div class="ws reveal reveal-delay-3"><div class="n">100%</div><div class="l">Satisfaction</div></div>
+      </div>
+    </div>
+    <div class="why-right reveal right">
+      <div class="why-vis">
+        <div class="why-badge-ring"><div class="why-badge-inner"><div class="bn">99.9%</div><div class="bl">Uptime</div></div></div>
+        <span class="why-emoji">🏰</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div class="features" id="features">
+  <div class="features-head reveal">
+    <div class="sec-tag-inline">Core Features</div>
+    <h2>Powerful Hosting Features Built for<br><span class="hl">Performance and Reliability</span></h2>
+  </div>
+  <div class="hex-layout">
+    <div class="feat-col">
+      <div class="feat-card reveal reveal-delay-1"><div class="feat-ic">🛡️</div><div><h4>Enterprise DDoS Protection</h4><p>Multi-layer DDoS mitigation up to 1 Tbps. Your server stays online 24/7.</p></div></div>
+      <div class="feat-card reveal reveal-delay-2"><div class="feat-ic">⚡</div><div><h4>Instant Setup</h4><p>Your game server is live in under 60 seconds. Automated provisioning, zero manual steps.</p></div></div>
+      <div class="feat-card reveal reveal-delay-3"><div class="feat-ic">💾</div><div><h4>Ultra Fast NVMe</h4><p>Gen 4 NVMe SSDs with dedicated resources. Instant world loads, zero disk bottlenecks.</p></div></div>
+    </div>
+    <div class="hex-mid reveal">
+      <div class="hex-wrap">
+        <div class="hex-glow"></div>
+        <div class="hex-bg"></div>
+        <div class="hex-content">
+          <img src="https://i.ibb.co/mCBp1nMm/Whats-App-Image-2026-06-27-at-10-28-30-AM.jpg" alt="Tiger Host">
+          <div class="hn">Tiger<br>Host</div>
+          <div class="hs">Game Hosting</div>
+        </div>
+      </div>
+    </div>
+    <div class="feat-col">
+      <div class="feat-card reveal reveal-delay-1"><div class="feat-ic">📦</div><div><h4>Mod &amp; Plugin Support</h4><p>One-click install for thousands of mods and plugins. Full FTP access for total control.</p></div></div>
+      <div class="feat-card reveal reveal-delay-2"><div class="feat-ic">🌏</div><div><h4>Multi-Location Nodes</h4><p>8 data centers incl. Mumbai, Delhi, Singapore &amp; more.</p></div></div>
+      <div class="feat-card reveal reveal-delay-3"><div class="feat-ic">💬</div><div><h4>24/7 Expert Support</h4><p>Real gamers on our team. Live chat, tickets &amp; Discord — always available.</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stats-row">
+    <div class="st reveal reveal-delay-1"><div class="big">7k+</div><div class="lbl">Active Servers</div></div>
+    <div class="st reveal reveal-delay-2"><div class="big">60+</div><div class="lbl">Game Titles</div></div>
+    <div class="st reveal reveal-delay-3"><div class="big">20+</div><div class="lbl">Data Centers</div></div>
+    <div class="st reveal reveal-delay-4"><div class="big">3k+</div><div class="lbl">Happy Clients</div></div>
+  </div>
+</div>
+
+<!-- GAMES / PLANS — server-rendered, no JS needed to load these -->
+<div class="games" id="games-section">
+  <div class="games-head reveal">
+    <div class="sec-tag-inline">Plans Library</div>
+    <h2>Premium Plans for <span class="hl">Every Adventure</span></h2>
+  </div>
+  <div class="games-grid">
+    <% const tagClasses = { pop:'gtag gtag-pop', hot:'gtag gtag-hot', new:'gtag gtag-new' }; %>
+    <% const tagTexts   = { pop:'⭐ Popular', hot:'🔥 Hot', new:'✨ New' }; %>
+    <% const bgMap = { 'bg-mc':'gc-mc','bg-rust':'gc-rust','bg-ark':'gc-ark','bg-fivem':'gc-fivem','bg-val':'gc-val','bg-dayz':'gc-dayz' }; %>
+    <% plans.slice(0,6).forEach(function(p, i) { %>
+      <div class="gcard reveal reveal-delay-<%= (i % 4) + 1 %>">
+        <% if(p.tag) { %><div class="<%= tagClasses[p.tag] || '' %>"><%= tagTexts[p.tag] || '' %></div><% } %>
+        <div class="gcard-img <%= bgMap[p.bg] || 'gc-mc' %>">
+          <span class="game-emoji"><%= p.emoji || '📦' %></span>
+        </div>
+        <div class="gcard-body">
+          <div class="gcard-name"><%= p.name %></div>
+          <div class="gcard-row">
+            <span class="gcard-slots"><%= p.ram || '' %></span>
+            <span class="gcard-price">From ₹<%= p.price %>/mo</span>
+          </div>
+        </div>
+        <a href="/games" class="gcard-btn">Order Now →</a>
+      </div>
+    <% }); %>
+  </div>
+  <div class="games-cta reveal"><a href="/games">View All Plans →</a></div>
+</div>
+
+<!-- REVIEWS -->
+<div class="reviews">
+  <div class="reviews-head reveal"><div class="sec-tag-inline">Testimonials</div><h2>Don't Just Take Our Word For It</h2></div>
+  <div class="reviews-grid">
+    <div class="rev-card reveal reveal-delay-1"><div class="rev-top"><div class="rev-av" style="background:linear-gradient(135deg,#1400ff,#0040ff)">GF</div><div><div class="rev-name">GameFleet</div><div class="rev-handle">@gamefleet_yt • YouTube</div></div></div><div class="rev-stars">★★★★★</div><div class="rev-body">"Tiger Host changed everything. Mumbai nodes give our players under 5ms ping."</div><div class="rev-verified">✓ Verified Partner</div></div>
+    <div class="rev-card reveal reveal-delay-2"><div class="rev-top"><div class="rev-av" style="background:linear-gradient(135deg,#cc2200,#ff4400)">BP</div><div><div class="rev-name">BatuPlays</div><div class="rev-handle">@batuplayslive • Twitch</div></div></div><div class="rev-stars">★★★★★</div><div class="rev-body">"Tried 5 different hosts — Tiger Host is in a different league. Zero lag at peak hours!"</div><div class="rev-verified">✓ Verified Partner</div></div>
+    <div class="rev-card reveal reveal-delay-3"><div class="rev-top"><div class="rev-av" style="background:linear-gradient(135deg,#0088ff,#00ccff)">MC</div><div><div class="rev-name">MCFrame</div><div class="rev-handle">@mcframe_official • YouTube</div></div></div><div class="rev-stars">★★★★★</div><div class="rev-body">"200-player Rust server hasn't dropped once in 6 months. DDoS protection is insane."</div><div class="rev-verified">✓ Verified Partner</div></div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="faq">
+  <div class="faq-head reveal"><div class="sec-tag-inline">FAQ</div><h2>Frequently Asked Questions</h2></div>
+  <div class="faq-list">
+    <div class="faq-item open reveal reveal-delay-1"><div class="faq-q" onclick="toggleFaq(this)">How quickly is my server available?<span class="faq-plus">+</span></div><div class="faq-a">Your server deploys automatically within 60 seconds of payment confirmation.</div></div>
+    <div class="faq-item reveal reveal-delay-2"><div class="faq-q" onclick="toggleFaq(this)">Can I upgrade my plan later?<span class="faq-plus">+</span></div><div class="faq-a">Yes, anytime from the client area. Upgrades are prorated — you only pay the difference.</div></div>
+    <div class="faq-item reveal reveal-delay-3"><div class="faq-q" onclick="toggleFaq(this)">What are your cancellation/refund policies?<span class="faq-plus">+</span></div><div class="faq-a">We offer a full 24-hour money-back guarantee. Contact support within 24 hours.</div></div>
+    <div class="faq-item reveal reveal-delay-4"><div class="faq-q" onclick="toggleFaq(this)">Do you support Indian payment methods?<span class="faq-plus">+</span></div><div class="faq-a">Yes! We support UPI, Net Banking, Credit/Debit Cards, Wallets and cryptocurrency. All prices are in INR.</div></div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

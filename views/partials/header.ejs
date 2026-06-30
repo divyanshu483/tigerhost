@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= typeof title !== 'undefined' ? title : 'Tiger Host | Premium Game Server Hosting' %></title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Inter:wght@300;400;500;600;700;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+
+<!-- CURSORS -->
+<div id="cursor-outer"></div>
+<div id="cursor-dot"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- PARTICLES -->
+<canvas id="particles-canvas"></canvas>
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- SCROLL TOP -->
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- NAVBAR -->
+<nav id="mainNav">
+  <a href="/" class="logo-wrap">
+    <img src="https://i.ibb.co/mCBp1nMm/Whats-App-Image-2026-06-27-at-10-28-30-AM.jpg" alt="Tiger Host">
+    <span class="logo-name">Tiger Host</span>
+  </a>
+  <div class="nav-links">
+    <div class="nav-item">
+      <a href="/games">Game Servers <span class="arr">▾</span></a>
+      <div class="dropdown">
+        <a href="/games">⛏️ Budget-Minecraft</a>
+        <a href="/games">🔫 Premium-Minecraft</a>
+        <a href="/games">View All Games →</a>
+      </div>
+    </div>
+    <div class="nav-item">
+      <a href="/games">VPS <span class="arr">▾</span></a>
+      <div class="dropdown">
+        <a href="/games">🖥️ Intel VPS</a>
+        <a href="/games">🪟 AMD VPS</a>
+      </div>
+    </div>
+    <div class="nav-item"><a href="/locations">Locations</a></div>
+    <div class="nav-item"><a href="/#features">Features</a></div>
+    <div class="nav-item"><a href="/games">Pricing</a></div>
+    <div class="nav-item">
+      <a href="#">Support <span class="arr">▾</span></a>
+      <div class="dropdown">
+        <a href="https://discord.gg/SxUVewXjUx">🎮 Discord</a>
+        <a href="https://gp.hgnetwork.xyz/">📡 Server Status</a>
+      </div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <a href="/games" class="nav-signup">Get Started →</a>
+    <div class="hamburger" id="hamburger" onclick="toggleMobile()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/games">Game Servers</a>
+    <a href="/games">VPS Hosting</a>
+    <a href="/#features">Features</a>
+    <a href="/games">Pricing</a>
+    <a href="/support">Support</a>
+    <a href="/games" style="color:var(--cyan);font-weight:700;">🚀 Get Started Free</a>
+  </div>
+</nav>

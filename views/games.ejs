@@ -1,0 +1,84 @@
+<%- include('partials/header', { title: 'Game Servers — Tiger Host' }) %>
+
+<div class="page-hero">
+  <div class="reveal">
+    <span style="display:inline-block;background:rgba(20,0,255,.14);border:1px solid rgba(20,0,255,.32);padding:4px 14px;border-radius:4px;font-size:10.5px;font-weight:700;color:var(--cyan);letter-spacing:.8px;text-transform:uppercase;margin-bottom:14px;">🎮 Plans Available</span>
+  </div>
+  <h1 class="reveal"><span class="hl">Game Server</span> Hosting<br>for Every Title</h1>
+  <p class="reveal">Deploy in 60 seconds. DDoS protection and 99.9% uptime guaranteed.</p>
+  <div class="search-bar reveal">
+    <input class="search-inp" id="searchInput" type="text" placeholder="Search plans... (Trial, Nano, VPS...)" oninput="filterGames()">
+    <button class="search-btn" onclick="filterGames()">Search</button>
+  </div>
+</div>
+
+<div class="filters">
+  <button class="filter-btn on" onclick="setFilter(this,'all')">All-Services</button>
+  <button class="filter-btn" onclick="setFilter(this,'sandbox')">Budget-Minecraft</button>
+  <button class="filter-btn" onclick="setFilter(this,'fps')">Premium-Minecraft</button>
+  <button class="filter-btn" onclick="setFilter(this,'survival')">VPS-Plans</button>
+  <button class="filter-btn" onclick="setFilter(this,'rpg')">BOT-Plans</button>
+  <button class="filter-btn" onclick="setFilter(this,'popular')">Domain-Plans</button>
+</div>
+
+<div class="games-section">
+  <div class="games-grid-full" id="gamesGrid">
+    <%
+      const tagClasses = { pop:'tag-pop', hot:'tag-hot', new:'tag-new' };
+      const tagLabels  = { pop:'⭐ #1 Popular', hot:'🔥 Hot', new:'✨ New Plans' };
+      const delays     = ['rd1','rd2','rd3','rd4','rd5','rd6'];
+    %>
+    <% plans.forEach(function(p, i) { %>
+      <div class="game-card reveal <%= delays[i % 6] %>" data-cat="<%= p.cat || 'sandbox' %>">
+        <div class="gc-banner <%= p.bg || 'bg-mc' %>">
+          <% if(p.tag) { %>
+            <div class="gc-tag <%= tagClasses[p.tag] || '' %>"><%= tagLabels[p.tag] || '' %></div>
+          <% } %>
+          <div class="gc-emoji"><%= p.emoji || '📦' %></div>
+        </div>
+        <div class="gc-body">
+          <div class="gc-name"><%= p.name %></div>
+          <div class="gc-desc"><%= p.desc || '' %></div>
+          <% if(p.pills && p.pills.length) { %>
+            <div class="gc-meta">
+              <% p.pills.forEach(function(pill) { %>
+                <span class="gc-meta-pill"><%= pill %></span>
+              <% }); %>
+            </div>
+          <% } %>
+          <div class="gc-bottom">
+            <div>
+              <div class="gc-price">₹<%= p.price %><span style="font-size:12px;background:none;-webkit-text-fill-color:var(--muted)">/mo</span></div>
+              <div class="gc-price-sub">Starting from <%= p.ram || '' %></div>
+            </div>
+            <a href="/order?plan=<%= encodeURIComponent(p.name) %>" class="gc-order">Order Now →</a>
+          </div>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+</div>
+
+<script>
+// Filter & search — works on pre-rendered server HTML
+let curFilter = 'all';
+function setFilter(btn, f) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  curFilter = f;
+  applyFilter();
+}
+function filterGames() { applyFilter(); }
+function applyFilter() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  document.querySelectorAll('.game-card').forEach(card => {
+    const name = card.querySelector('.gc-name').textContent.toLowerCase();
+    const cat  = card.dataset.cat || '';
+    const matchFilter = curFilter === 'all' || cat === curFilter;
+    const matchSearch = !q || name.includes(q) || cat.includes(q);
+    card.style.display = (matchFilter && matchSearch) ? '' : 'none';
+  });
+}
+</script>
+
+<%- include('partials/footer') %>

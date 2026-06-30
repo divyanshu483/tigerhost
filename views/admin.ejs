@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel — Tiger Host</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+<!-- Login Screen -->
+<div id="loginScreen" style="position:fixed;inset:0;background:var(--dark);z-index:999;display:flex;align-items:center;justify-content:center;">
+  <div style="background:var(--card2);border:1px solid var(--border2);border-radius:14px;padding:36px;width:360px;text-align:center;">
+    <div style="font-size:2.5rem;margin-bottom:12px;">🐯</div>
+    <div style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:6px;">TIGER HOST</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:28px;">Admin Panel — Secure Login</div>
+    <input type="password" id="loginPass" placeholder="Enter admin password" style="width:100%;padding:11px 14px;background:rgba(0,0,0,.4);border:1px solid var(--border2);border-radius:8px;color:#fff;font-size:13px;outline:none;margin-bottom:12px;" onkeydown="if(event.key==='Enter')doLogin()">
+    <div id="loginErr" style="font-size:12px;color:var(--red);margin-bottom:10px;display:none;">❌ Wrong password</div>
+    <button onclick="doLogin()" style="width:100%;padding:12px;background:linear-gradient(135deg,#1400ff,#0040ff);border:none;border-radius:8px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;">Login →</button>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- Delete Confirm Modal -->
+<div class="modal-overlay del-modal" id="delModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">⚠️ Delete Plan</div>
+      <button class="modal-close" onclick="closeDelModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="del-warning" id="delWarningText"></div>
+      <p style="font-size:12.5px;color:var(--muted);">Are you sure? This cannot be undone.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeDelModal()">Cancel</button>
+      <button class="btn btn-danger" id="delConfirmBtn" onclick="confirmDelete()">Delete Plan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add / Edit Modal -->
+<div class="modal-overlay" id="planModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">Add New Plan</div>
+      <button class="modal-close" onclick="closePlanModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Plan Name *</label><input class="form-input" id="f_name" placeholder="e.g. Nano" /></div>
+        <div class="form-group"><label class="form-label">Price (₹/mo) *</label><input class="form-input" id="f_price" type="number" placeholder="99" /></div>
+        <div class="form-group"><label class="form-label">Category *</label>
+          <select class="form-select" id="f_cat">
+            <option value="sandbox">Budget Minecraft</option>
+            <option value="fps">Premium Minecraft</option>
+            <option value="survival">VPS Plans</option>
+            <option value="rpg">Bot Plans</option>
+            <option value="popular">Domain Plans</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Tag / Badge</label>
+          <select class="form-select" id="f_tag">
+            <option value="">None</option>
+            <option value="pop">⭐ #1 Popular</option>
+            <option value="hot">🔥 Hot</option>
+            <option value="new">✨ New Plans</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Emoji Icon</label><input class="form-input" id="f_emoji" placeholder="⛏️" maxlength="4" /></div>
+        <div class="form-group"><label class="form-label">Starting RAM</label><input class="form-input" id="f_ram" placeholder="e.g. 2GB RAM" /></div>
+        <div class="form-group span2"><label class="form-label">Description</label><textarea class="form-textarea" id="f_desc" placeholder="Short description..."></textarea></div>
+        <div class="form-group span2">
+          <label class="form-label">Feature Pills</label>
+          <div class="pills-editor">
+            <div class="pills-list" id="pillsList"></div>
+            <div class="pills-add-row">
+              <input class="form-input" id="pillInput" placeholder="e.g. Unlimited Slots" onkeydown="if(event.key==='Enter'){addPill();event.preventDefault();}"/>
+              <button class="btn btn-ghost btn-sm" onclick="addPill()">+ Add</button>
+            </div>
+          </div>
+        </div>
+        <div class="form-group span2"><label class="form-label">Background Theme</label>
+          <select class="form-select" id="f_bg">
+            <option value="bg-mc">🟢 Minecraft (Green)</option>
+            <option value="bg-rust">🟠 Rust (Orange)</option>
+            <option value="bg-ark">🔵 ARK (Blue)</option>
+            <option value="bg-fivem">🟣 FiveM (Purple)</option>
+            <option value="bg-val">🌿 Valheim (Forest)</option>
+            <option value="bg-dayz">🟤 DayZ (Brown)</option>
+            <option value="bg-vr">🔮 VR (Violet)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closePlanModal()">Cancel</button>
+      <button class="btn btn-primary" id="modalSaveBtn" onclick="savePlan()">💾 Save Plan</button>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="https://i.ibb.co/mCBp1nMm/Whats-App-Image-2026-06-27-at-10-28-30-AM.jpg" alt="Tiger Host" style="width:36px;height:36px;border-radius:8px;object-fit:cover;flex-shrink:0;">
+      <div><div class="sidebar-logo-name">Tiger Host</div><div class="sidebar-logo-sub">Admin Panel</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Management</div>
+      <button class="nav-btn active" onclick="switchView('all',this)"><span class="nav-icon">📦</span>All Plans<span class="nav-badge" id="totalBadge">0</span></button>
+      <button class="nav-btn" onclick="switchView('sandbox',this)"><span class="nav-icon">⛏️</span>Budget MC<span class="nav-badge" id="mcBadge">0</span></button>
+      <button class="nav-btn" onclick="switchView('survival',this)"><span class="nav-icon">🖥️</span>VPS Plans<span class="nav-badge" id="vpsBadge">0</span></button>
+      <button class="nav-btn" onclick="switchView('rpg',this)"><span class="nav-icon">🤖</span>Bot Plans<span class="nav-badge" id="botBadge">0</span></button>
+      <div class="nav-section-label" style="margin-top:12px;">Actions</div>
+      <button class="nav-btn" onclick="openAddModal()"><span class="nav-icon">➕</span>Add New Plan</button>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="firebase-status">
+        <div class="fs-dot connected" id="fsDot"></div>
+        <span id="fsStatus" style="color:var(--green);">Server connected</span>
+      </div>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbarTitle">All Plans</div>
+      <div class="topbar-actions">
+        <button class="btn btn-primary btn-sm" onclick="openAddModal()">+ Add Plan</button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="stats-row">
+        <div class="stat-card blue"><div class="stat-label">Total Plans</div><div class="stat-val" id="s_total">—</div></div>
+        <div class="stat-card cyan"><div class="stat-label">Minecraft</div><div class="stat-val" id="s_mc">—</div></div>
+        <div class="stat-card green"><div class="stat-label">VPS Plans</div><div class="stat-val" id="s_vps">—</div></div>
+        <div class="stat-card orange"><div class="stat-label">Cheapest</div><div class="stat-val" id="s_cheap">—</div></div>
+      </div>
+      <div class="filter-bar">
+        <button class="filter-chip on" onclick="filterChip(this,'all')">All</button>
+        <button class="filter-chip" onclick="filterChip(this,'sandbox')">Budget MC</button>
+        <button class="filter-chip" onclick="filterChip(this,'fps')">Premium MC</button>
+        <button class="filter-chip" onclick="filterChip(this,'survival')">VPS</button>
+        <button class="filter-chip" onclick="filterChip(this,'rpg')">Bot</button>
+        <button class="filter-chip" onclick="filterChip(this,'popular')">Domain</button>
+        <input class="search-inp-bar" placeholder="🔍 Search plans…" oninput="searchPlans(this.value)" />
+      </div>
+      <div id="plansContainer">
+        <div class="empty-state"><div class="empty-icon">⏳</div><div class="empty-title">Loading plans…</div></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ── State ─────────────────────────────────────────────────
+let adminToken    = '';
+let allPlans      = [];
+let currentPills  = [];
+let editingId     = null;
+let deleteTargetId= null;
+let currentFilter = 'all';
+let searchQuery   = '';
+
+// ── Login (password checked by SERVER, not client) ────────
+async function doLogin() {
+  const pass = document.getElementById('loginPass').value;
+  const err  = document.getElementById('loginErr');
+  err.style.display = 'none';
+  try {
+    const res  = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pass })
+    });
+    const data = await res.json();
+    if (data.success) {
+      adminToken = data.token;
+      document.getElementById('loginScreen').style.display = 'none';
+      loadPlans();
+    } else {
+      err.style.display = 'block';
+    }
+  } catch(e) {
+    err.textContent = '❌ Server error';
+    err.style.display = 'block';
+  }
+}
+
+// ── Load plans from server API ────────────────────────────
+async function loadPlans() {
+  try {
+    const res  = await fetch('/api/plans');
+    const data = await res.json();
+    allPlans   = data.plans || [];
+    updateStats();
+    updateBadges();
+    renderPlans();
+  } catch(e) {
+    showToast('❌ Could not load plans: ' + e.message, 'red');
+  }
+}
+
+// ── Render ────────────────────────────────────────────────
+function renderPlans() {
+  const filtered = allPlans.filter(p => {
+    const matchCat    = currentFilter === 'all' || p.cat === currentFilter;
+    const q           = searchQuery.toLowerCase();
+    const matchSearch = !q || p.name?.toLowerCase().includes(q);
+    return matchCat && matchSearch;
+  });
+  const container = document.getElementById('plansContainer');
+  if (!filtered.length) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">No plans found</div></div>`;
+    return;
+  }
+  container.innerHTML = `<div class="plans-grid">${filtered.map(planCard).join('')}</div>`;
+}
+
+function planCard(p) {
+  const tagMap   = { pop:'tag-pop', hot:'tag-hot', new:'tag-new' };
+  const tagLabel = { pop:'⭐ Popular', hot:'🔥 Hot', new:'✨ New' };
+  const catLabel = { sandbox:'Budget MC', fps:'Premium MC', survival:'VPS', rpg:'Bot', popular:'Domain' };
+  const pills    = (p.pills || []).map(pl => `<span class="plan-pill">${pl}</span>`).join('');
+  const tagCls   = tagMap[p.tag] || '';
+  const tagTxt   = tagLabel[p.tag] || '';
+  return `
+  <div class="plan-card">
+    <div class="plan-card-header">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="font-size:22px">${p.emoji || '📦'}</div>
+        <div><div class="plan-card-title">${p.name || 'Unnamed'}</div><div class="plan-card-cat">${catLabel[p.cat] || p.cat}</div></div>
+      </div>
+      ${tagTxt ? `<span class="plan-tag ${tagCls}">${tagTxt}</span>` : ''}
+    </div>
+    <div class="plan-card-body">
+      ${pills ? `<div class="plan-meta-row">${pills}</div>` : ''}
+      <div class="plan-desc-text">${p.desc || 'No description.'}</div>
+      <div class="plan-card-footer">
+        <div>
+          <div class="plan-price">₹${p.price || 0}<span style="font-size:11px;background:none;-webkit-text-fill-color:var(--muted)">/mo</span></div>
+          <div class="plan-price-sub">From ${p.ram || '?'}</div>
+        </div>
+        <div class="plan-actions">
+          <button class="btn btn-ghost btn-sm btn-icon" onclick="openEditModal('${p.id}')" title="Edit">✏️</button>
+          <button class="btn btn-danger btn-sm btn-icon" onclick="openDelModal('${p.id}')" title="Delete">🗑️</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── Stats / Badges ────────────────────────────────────────
+function updateStats() {
+  const prices = allPlans.map(p => p.price).filter(Boolean);
+  document.getElementById('s_total').textContent = allPlans.length;
+  document.getElementById('s_mc').textContent    = allPlans.filter(p => p.cat==='sandbox'||p.cat==='fps').length;
+  document.getElementById('s_vps').textContent   = allPlans.filter(p => p.cat==='survival').length;
+  document.getElementById('s_cheap').textContent = prices.length ? '₹'+Math.min(...prices) : '—';
+}
+function updateBadges() {
+  document.getElementById('totalBadge').textContent  = allPlans.length;
+  document.getElementById('mcBadge').textContent     = allPlans.filter(p=>p.cat==='sandbox'||p.cat==='fps').length;
+  document.getElementById('vpsBadge').textContent    = allPlans.filter(p=>p.cat==='survival').length;
+  document.getElementById('botBadge').textContent    = allPlans.filter(p=>p.cat==='rpg').length;
+}
+
+// ── Filter ────────────────────────────────────────────────
+function filterChip(btn, cat) {
+  document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on'); currentFilter = cat; renderPlans();
+}
+function searchPlans(q) { searchQuery = q; renderPlans(); }
+function switchView(cat, btn) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active'); currentFilter = cat; renderPlans();
+}
+
+// ── Add / Edit Modal ──────────────────────────────────────
+function openAddModal() {
+  editingId = null; currentPills = []; clearForm(); renderPills();
+  document.getElementById('modalTitle').textContent   = 'Add New Plan';
+  document.getElementById('modalSaveBtn').textContent = '💾 Save Plan';
+  document.getElementById('planModal').classList.add('open');
+}
+function closePlanModal() { document.getElementById('planModal').classList.remove('open'); }
+function openEditModal(id) {
+  const plan = allPlans.find(p => p.id === id);
+  if (!plan) return;
+  editingId = id; currentPills = [...(plan.pills || [])];
+  document.getElementById('modalTitle').textContent   = 'Edit Plan';
+  document.getElementById('modalSaveBtn').textContent = '✏️ Update Plan';
+  document.getElementById('f_name').value  = plan.name  || '';
+  document.getElementById('f_price').value = plan.price || '';
+  document.getElementById('f_cat').value   = plan.cat   || 'sandbox';
+  document.getElementById('f_tag').value   = plan.tag   || '';
+  document.getElementById('f_emoji').value = plan.emoji || '';
+  document.getElementById('f_ram').value   = plan.ram   || '';
+  document.getElementById('f_desc').value  = plan.desc  || '';
+  document.getElementById('f_bg').value    = plan.bg    || 'bg-mc';
+  renderPills();
+  document.getElementById('planModal').classList.add('open');
+}
+function clearForm() {
+  ['f_name','f_price','f_emoji','f_ram','f_desc','pillInput'].forEach(id => { const el=document.getElementById(id); if(el)el.value=''; });
+  document.getElementById('f_cat').value = 'sandbox';
+  document.getElementById('f_tag').value = '';
+  document.getElementById('f_bg').value  = 'bg-mc';
+}
+
+// ── Pills ─────────────────────────────────────────────────
+function renderPills() {
+  document.getElementById('pillsList').innerHTML = currentPills.map((p,i) =>
+    `<span class="pill-item">${p}<button class="pill-remove" onclick="removePill(${i})">✕</button></span>`
+  ).join('');
+}
+function addPill() {
+  const inp = document.getElementById('pillInput');
+  const val = inp.value.trim();
+  if (!val) return;
+  currentPills.push(val); inp.value = ''; renderPills();
+}
+function removePill(i) { currentPills.splice(i,1); renderPills(); }
+
+// ── Save (calls server API with password in header) ───────
+async function savePlan() {
+  const name  = document.getElementById('f_name').value.trim();
+  const price = parseFloat(document.getElementById('f_price').value);
+  if (!name)                { showToast('⚠️ Plan name required','red'); return; }
+  if (isNaN(price)||price<0){ showToast('⚠️ Enter valid price','red'); return; }
+  const data = {
+    name, price,
+    cat:   document.getElementById('f_cat').value,
+    tag:   document.getElementById('f_tag').value,
+    emoji: document.getElementById('f_emoji').value.trim() || '📦',
+    ram:   document.getElementById('f_ram').value.trim(),
+    desc:  document.getElementById('f_desc').value.trim(),
+    bg:    document.getElementById('f_bg').value,
+    pills: currentPills,
+  };
+  const btn = document.getElementById('modalSaveBtn');
+  btn.textContent = '⏳ Saving…'; btn.disabled = true;
+  try {
+    const url    = editingId ? `/api/plans/${editingId}` : '/api/plans';
+    const method = editingId ? 'PUT' : 'POST';
+    const res    = await fetch(url, {
+      method,
+      headers: { 'Content-Type':'application/json', 'x-admin-password': adminToken },
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    if (result.success) {
+      showToast(`✅ "${name}" ${editingId?'updated':'added'}`, 'green');
+      closePlanModal();
+      loadPlans(); // refresh list
+    } else {
+      showToast('❌ ' + result.error, 'red');
+    }
+  } catch(e) {
+    showToast('❌ ' + e.message, 'red');
+  } finally {
+    btn.textContent = editingId ? '✏️ Update Plan' : '💾 Save Plan';
+    btn.disabled = false;
+  }
+}
+
+// ── Delete ────────────────────────────────────────────────
+function openDelModal(id) {
+  const plan = allPlans.find(p => p.id === id);
+  deleteTargetId = id;
+  document.getElementById('delWarningText').textContent =
+    `You are about to permanently delete "${plan?.name}" (₹${plan?.price}/mo).`;
+  document.getElementById('delModal').classList.add('open');
+}
+function closeDelModal() { document.getElementById('delModal').classList.remove('open'); deleteTargetId = null; }
+async function confirmDelete() {
+  if (!deleteTargetId) return;
+  const btn = document.getElementById('delConfirmBtn');
+  btn.textContent = '⏳ Deleting…'; btn.disabled = true;
+  try {
+    const res    = await fetch(`/api/plans/${deleteTargetId}`, {
+      method: 'DELETE',
+      headers: { 'x-admin-password': adminToken }
+    });
+    const result = await res.json();
+    if (result.success) {
+      showToast('🗑️ Plan deleted','red');
+      closeDelModal();
+      loadPlans();
+    } else {
+      showToast('❌ ' + result.error, 'red');
+    }
+  } catch(e) {
+    showToast('❌ ' + e.message, 'red');
+  } finally {
+    btn.textContent = 'Delete Plan'; btn.disabled = false;
+  }
+}
+
+// ── Toast ─────────────────────────────────────────────────
+function showToast(msg, type='blue') {
+  const wrap = document.getElementById('toastWrap');
+  const t    = document.createElement('div'); t.className = 'toast';
+  const cols = { blue:'rgba(20,0,255,.9)', green:'rgba(0,180,80,.9)', red:'rgba(220,50,70,.9)' };
+  t.innerHTML = `<div class="toast-dot" style="background:${cols[type]};box-shadow:0 0 8px ${cols[type]}"></div><span>${msg}</span>`;
+  wrap.appendChild(t);
+  requestAnimationFrame(() => requestAnimationFrame(() => t.classList.add('show')));
+  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 350); }, 4000);
+}
+
+document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if(e.target===o) o.classList.remove('open'); }));
+document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+</script>
+</body>
+</html>
